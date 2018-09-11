@@ -27,7 +27,7 @@ def loss_classif(logits, labels):
     correct_prediction = tf.equal(tf.argmax(logits, 1), labels)
     acc = tf.reduce_mean(tf.cast(correct_prediction,tf.float32))
     
-    tf.summary.scalar('loss', loss)
+    #tf.summary.scalar('loss', loss)
     tf.summary.scalar('acc', acc)
     tf.add_to_collection('losses', loss)
     return tf.add_n(tf.get_collection('losses'), name='total_loss'), acc
@@ -53,7 +53,7 @@ def _add_loss_summaries(total_loss):
   for l in losses + [total_loss]:
     # Name each loss as '(raw)' and name the moving average version of the loss
     # as the original loss name.
-    tf.summary.scalar(l.op.name +' (raw)', l)
+    tf.summary.scalar(l.op.name +'_raw', l)
     tf.summary.scalar(l.op.name, loss_averages.average(l))
 
   return loss_averages_op

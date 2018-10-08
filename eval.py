@@ -49,7 +49,7 @@ def main(eval_log_dir, train_log_dir, args):
     with tf.Graph().as_default():
         # Build model
         img_op, labels_op = data.inputs(True, data_dir, args.batch_size)
-        logits_op = model.model(img_op, is_training=False)
+        logits_op = model.model(img_op, is_training=False, scope_name='original')
         loss_op, acc_op = loss.loss_classif(logits_op, labels_op)
         #acc_op = tf.nn.in_top_k(logits_op, labels_op, 1)
         cm_op=tf.confusion_matrix(labels_op, tf.argmax(logits_op, axis=1),10)

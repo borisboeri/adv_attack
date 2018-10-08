@@ -42,9 +42,14 @@ def train_network(args):
     with tf.Graph().as_default():
         global_step = tf.Variable(0, trainable=False) 
         img_op, labels_op = data.inputs(False, data_dir, args.batch_size) 
-        logits_op = model.model(img_op, is_training=True)
+        logits_op = model.model(img_op, is_training=True, scope_name='original') # generate the graph model
+        perturbed_logits_op = model.model(img_op, is_training=True, scope_name='perturbed') # generate the graph model
         loss_op, acc_op = loss.loss_classif(logits_op, labels_op)
         train_op = loss.train(loss_op, global_step, args) # trains
+
+        var_list =  tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES)
+        for var in var_list:
+            print(var.op.name)
      
         # Set saver to restore network before eval
         variable_averages = tf.train.ExponentialMovingAverage(args.moving_average_decay)

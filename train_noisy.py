@@ -68,7 +68,7 @@ def train_network(args):
             
             ### begin var  assignment OK !!! Do this one !
             if args.start == 0:
-                original_dir = 'path/to/trained/original/weights'/
+                original_log_dir = '.log/test/'
                 ckpt = tf.train.get_checkpoint_state(original_log_dir)
                 print("checkpoint path: ", ckpt.model_checkpoint_path)
                 if ckpt and ckpt.model_checkpoint_path:

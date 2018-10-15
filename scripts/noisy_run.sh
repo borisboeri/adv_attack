@@ -4,36 +4,40 @@ LOG_ROOT_DIR=log/
 
 if [ "$1" = '-h' ]; then 
   echo "Usage"
-  echo "  1. Xp name"
-  echo "  2. Data"
-  echo "  3. Number of epochs to train"
-  echo "  4. Number of epochs between tests"
-  echo "  5. Model"
+  echo "  1. Xp source"
+  echo "  2. Xp name"
+  echo "  3. Data"
+  echo "  4. Number of epochs to train"
+  echo "  5. Number of epochs between tests"
+  echo "  6. Model"
   exit 0
 fi
 
-if [ "$#" -ne 5 ]; then
+if [ "$#" -ne 6 ]; then
   echo "Error: bad number of arguments"
   echo "Usage"
-  echo "  1. Xp name"
-  echo "  2. Data"
-  echo "  3. Number of epochs to train"
-  echo "  4. Number of epochs between tests"
-  echo "  5. Model"
+  echo "  1. Xp source"
+  echo "  2. Xp name"
+  echo "  3. Data"
+  echo "  4. Number of epochs to train"
+  echo "  5. Number of epochs between tests"
+  echo "  6. Model"
   exit 1
 fi
 
-xp_name="$1"
-data="$2"
-max_train_epoch="$3"
-eval_interval_epoch="$4"
+xp_source="$1"
+xp_name="$2"
+data="$3"
+max_train_epoch="$4"
+eval_interval_epoch="$5"
 num_iter=$((max_train_epoch/eval_interval_epoch))
-model="$5"
+model="$6"
 
 echo "Experiment recap:"
 echo "Train for "$max_train_epoch" epochs"
 echo "Test every "$eval_interval_epoch" epochs"
 # Create log directories
+source_log_dir=""$LOG_ROOT_DIR""$xp_source"/train/"
 train_log_dir=""$LOG_ROOT_DIR""$xp_name"/train/"
 val_log_dir=""$LOG_ROOT_DIR""$xp_name"/val/"
 echo ""$train_log_dir""
@@ -75,6 +79,8 @@ echo "num_iter = "$num_iter""
 while [ "$i" -lt "$num_iter" ]
 do
     python train_noisy.py \
+        --source_log_dir ./log/ \
+        --xp_source "$xp_source" \
         --train_log_dir ./log/ \
         --xp_name "$xp_name" \
         --display_interval 10 \

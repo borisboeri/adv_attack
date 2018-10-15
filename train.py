@@ -48,8 +48,8 @@ def train_network(args):
         train_op = loss.train(loss_op, global_step, args) # trains
 
         var_list =  tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES)
-        for var in var_list:
-            print(var.op.name)
+        #for var in var_list:
+         #   print(var.op.name)
      
         # Set saver to restore network before eval
         variable_averages = tf.train.ExponentialMovingAverage(args.moving_average_decay)

@@ -37,6 +37,7 @@ def train_network(args):
         exit(1)
 
     train_log_dir = os.path.join(args.train_log_dir, args.xp_name, 'train')
+    source_log_dir= os.path.join(args.source_log_dir, args.xp_source, 'train')
     data_dir = os.path.join(args.data_dir, args.data)
     
     with tf.Graph().as_default():
@@ -54,7 +55,7 @@ def train_network(args):
         #exit(0)
      
         # Set saver to restore network before eval
-        saver_original = tf.train.Saver(original_var_list) # saves only original
+        saver_original = tf.train.Saver(original_var_list)# saves only original
 
         # saver for all variables 
         variable_averages = tf.train.ExponentialMovingAverage(args.moving_average_decay)
@@ -68,11 +69,11 @@ def train_network(args):
             
             ### begin var  assignment OK !!! Do this one !
             if args.start == 0:
-                original_log_dir = '.log/test/'
+                original_log_dir = source_log_dir
                 ckpt = tf.train.get_checkpoint_state(original_log_dir)
                 print("checkpoint path: ", ckpt.model_checkpoint_path)
                 if ckpt and ckpt.model_checkpoint_path:
-                    saver_original.restore(sess, ckpt.model_checkpoint_path)
+                    saver_perturbed.restore(sess, ckpt.model_checkpoint_path)
                 else:
                     print('No checkpoint file found')
                     return
@@ -124,7 +125,7 @@ def train_network(args):
                 summary_str = sess.run(summary_op)
                 summary_writer.add_summary(summary_str, step)
                 checkpoint_path = os.path.join(train_log_dir, 'model.ckpt')
-                saver.save(sess, checkpoint_path, global_step=step)
+                saver_perturbed.save(sess, checkpoint_path, global_step=step)
 
             except Exception as e:  # pylint: disable=broad-except
                 coord.request_stop(e)
@@ -136,7 +137,9 @@ def train_network(args):
 if __name__ == '__main__':  
    
     parser = argparse.ArgumentParser()
+    parser.add_argument('--source_log_dir', type=str, help='path to original log')
     parser.add_argument('--train_log_dir', type=str, help='path to log dir')
+    parser.add_argument('--xp_source', type=str, help='xp source')
     parser.add_argument('--xp_name', type=str, help='xp name')
     parser.add_argument('--display_interval', type=int, default=10, help='')
     parser.add_argument('--summary_interval', type=int, default=10, help='')

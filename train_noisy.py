@@ -55,6 +55,7 @@ def train_network(args):
         #exit(0)
      
         # Set saver to restore network before eval
+        saver_restore = tf.train.Saver(original_var_list)
         saver_original = tf.train.Saver(original_var_list)# saves only original
 
         # saver for all variables 

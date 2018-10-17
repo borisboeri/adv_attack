@@ -43,7 +43,7 @@ def train_network(args):
         global_step = tf.Variable(0, trainable=False) 
         img_op, labels_op = data.inputs(False, data_dir, args.batch_size) 
         logits_op = model.model(img_op, is_training=True, scope_name='original') # generate the graph model
-        perturbed_logits_op = model.model(img_op, is_training=True, scope_name='perturbed') # generate the graph model
+        #perturbed_logits_op = model.model(img_op, is_training=True, scope_name='perturbed') # generate the graph model
         loss_op, acc_op = loss.loss_classif(logits_op, labels_op)
         train_op = loss.train(loss_op, global_step, args) # trains
 
@@ -52,9 +52,10 @@ def train_network(args):
          #   print(var.op.name)
      
         # Set saver to restore network before eval
-        variable_averages = tf.train.ExponentialMovingAverage(args.moving_average_decay)
-        variables_to_restore = variable_averages.variables_to_restore()
-        saver = tf.train.Saver(variables_to_restore)
+        #variable_averages = tf.train.ExponentialMovingAverage(args.moving_average_decay)
+        #variables_to_restore = variable_averages.variables_to_restore()
+        #saver = tf.train.Saver(variables_to_restore)
+        saver = tf.train.Saver(tf.all_variables())
    
         # Set summary op, restore vars
         summary_op = tf.summary.merge_all()
